@@ -23,9 +23,9 @@ IMG_SIZE = 32
 CHANNELS_IMG = 1
 VECT_DIM = 64
 EMB_DIM = 64
-EPOCHS = 2
-FEATURES_DISC = 16
-FEATURES_GEN = 32
+EPOCHS = 5
+FEATURES_DISC = 32
+FEATURES_GEN = 64
 DISC_ITERATIONS = 5
 NUM_CLASSES = 10
 
@@ -83,9 +83,9 @@ for epoch in range(EPOCHS):
             opt_disc.step()
 
         y = disc(fake,label).reshape(-1)
-        
         # E(D(G(z)))
-        loss_gen = -torch.mean(y) # + torch.mean(disc_real)
+        # y_ = disc(real,label).reshape(-1)
+        loss_gen = -torch.mean(y) # + torch.mean(y_)
 
         gen.zero_grad()
         loss_gen.backward()
@@ -113,3 +113,6 @@ for epoch in range(EPOCHS):
             step += 1
     end = perf_counter()
     print(f'Epoch TIME: {end-start:.3f}s')
+
+torch.save(gen.state_dict(), f'./trained_models/gen')
+torch.save(disc.state_dict(), f'./trained_models/disc')
