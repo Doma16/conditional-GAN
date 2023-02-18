@@ -12,6 +12,7 @@ from torch.utils.data import DataLoader
 from time import perf_counter
 
 from model import Generator, Discriminator
+from utils import my_penalty
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 print(f'Using device: {device}')
@@ -28,6 +29,7 @@ FEATURES_DISC = 32
 FEATURES_GEN = 64
 DISC_ITERATIONS = 5
 NUM_CLASSES = 10
+LAMBDA = 5
 
 transforms = transforms.Compose([
     transforms.Resize(IMG_SIZE),
@@ -72,10 +74,12 @@ for epoch in range(EPOCHS):
             disc_real = disc(real,label).reshape(-1)
             disc_fake = disc(fake,label).reshape(-1)
 
-            # grad penalty not implemented
+            # grad. penalty not implemented
+            gp = my_penalty(disc,label,real,fake,device)
+
             # E(D(x)) - E(D(G(z)))
             loss_disc = (
-                -(torch.mean(disc_real) - torch.mean(disc_fake))
+                -(torch.mean(disc_real) - torch.mean(disc_fake)) + LAMBDA*gp
             )
 
             disc.zero_grad()
@@ -94,7 +98,8 @@ for epoch in range(EPOCHS):
         if batchid % 10 == 0:
             print(
                 f'Epoch: {epoch}, Batch: {batchid}/{len(loader)} \ '
-                f'Loss D: {loss_disc:.4f}, Loss G: {loss_gen:.4f}'
+                f'Loss D: {loss_disc:.4f}, Loss G: {loss_gen:.4f} \ '
+                f'Grad. pen.: {gp.cpu().detach().numpy():.4f}'
             )
 
             with torch.no_grad():
