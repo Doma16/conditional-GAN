@@ -29,8 +29,10 @@ for i in range(20):
         label = torch.randint(0,10,(1,)).to(device)
 
         img = gen(noise,label)
+        # img = img / torch.norm(img)
+        # img = torch.sigmoid(img)
         img = img.cpu().detach().numpy().squeeze()
-
+        
         print(f'{label.cpu().detach().numpy()}')
         plt.imshow(img)
         plt.show()

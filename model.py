@@ -38,7 +38,7 @@ class Generator(nn.Module):
             self.block(4*features, 2*features, 4, 2, 1),
             self.block(2*features, features, 4, 2, 1),
             nn.ConvTranspose2d(features, out_channels, kernel_size=4, stride=2, padding=1),
-            nn.Tanh()
+            nn.Sigmoid()
         )
         self.embed = nn.Embedding(num_classes, emb_dim)
 

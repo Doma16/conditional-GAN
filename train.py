@@ -34,7 +34,7 @@ LAMBDA = 5
 transforms = transforms.Compose([
     transforms.Resize(IMG_SIZE),
     transforms.ToTensor(),
-    transforms.Normalize([0.5 for _ in range(CHANNELS_IMG)], [0.5 for _ in range(CHANNELS_IMG)])
+    #transforms.Normalize([0.5 for _ in range(CHANNELS_IMG)], [0.5 for _ in range(CHANNELS_IMG)])
 ])
 
 dataset = datasets.MNIST(root='../dataset/', train=True, transform=transforms, download=True)
