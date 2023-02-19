@@ -31,9 +31,16 @@ for i in range(20):
         img = gen(noise,label)
         # img = img / torch.norm(img)
         # img = torch.sigmoid(img)
-        img = img.cpu().detach().numpy().squeeze()
-        
-        print(f'{label.cpu().detach().numpy()}')
-        plt.imshow(img)
-        plt.show()
 
+        maxs = torch.max(img)
+        mins = torch.min(img)
+        img = (img - mins) / (maxs-mins)
+        img = img * 255
+        img = img.cpu().detach().numpy().squeeze()
+        img = np.uint8(img)
+
+        label = label.cpu().detach().numpy()
+        im = Image.fromarray(img)
+        im.show(title=f'{label}')
+        print(f'{label[0]}')
+        input(f"Press enter to continue: ")
