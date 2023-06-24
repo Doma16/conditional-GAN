@@ -22,6 +22,8 @@ gen.load_state_dict(torch.load(PATH))
 gen = gen.to(device)
 gen.eval()
 
+img_dict = {}
+
 for i in range(20):
 
     with torch.no_grad():
@@ -40,7 +42,15 @@ for i in range(20):
         img = np.uint8(img)
 
         label = label.cpu().detach().numpy()
+
+        img_dict[label[0]] = img
+        '''
         im = Image.fromarray(img)
         im.show(title=f'{label}')
         print(f'{label[0]}')
         input(f"Press enter to continue: ")
+        '''
+
+
+breakpoint()
+pass
